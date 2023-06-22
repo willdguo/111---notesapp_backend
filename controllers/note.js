@@ -38,7 +38,8 @@ notesRouter.post('/', (request, response) => {
 
     const note = new Note({
         title: body.title,
-        content: body.content
+        content: body.content,
+        date_created: body.date_created
     })
 
     note.save().then(savedNote => {
@@ -71,7 +72,8 @@ notesRouter.put('/:id', (request, response, next) => {
 
     const newNote = {
         title: body.title,
-        content: body.content
+        content: body.content,
+        date_created: body.date_created
     }
 
     Note.findByIdAndUpdate(request.params.id, newNote, { new: true})
