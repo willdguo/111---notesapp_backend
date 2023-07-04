@@ -22,6 +22,10 @@
         {
             "src": "/api/users",
             "dest": "/index.js"
+        },
+        {
+            "src": "/api/notes/(.*)",
+            "dest": "/index.js"
         },        
         {
             "src": "/(.*)",
