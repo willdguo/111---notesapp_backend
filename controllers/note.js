@@ -1,5 +1,7 @@
 const notesRouter = require('express').Router()
+const jwt = require('jsonwebtoken')
 const Note = require('../models/note')
+const User = require('../models/user')
 
 
 notesRouter.get('/info', (request, response) => {
@@ -9,12 +11,9 @@ notesRouter.get('/info', (request, response) => {
 })
 
 
-notesRouter.get('/', (request, response) => {
-
-    Note.find({}).then(notes => {
-        response.json(notes)
-    })
-
+notesRouter.get('/', async (request, response) => {
+    const notes = await Note.find({}).populate('user')
+    response.json(notes)
 })
 
 
@@ -33,36 +32,58 @@ notesRouter.get('/:id', (request, response, next) => {
 })
 
 
-notesRouter.post('/', (request, response) => {
+notesRouter.post('/', async (request, response) => {
     const body = request.body
+
+    if(!request.token){
+        return response.status(401).json({error: 'no token found'})
+    }
+
+    const decodedToken = jwt.verify(request.token, process.env.SECRET)
+
+    if(!decodedToken.id) {
+        return response.status(401).json({error: 'token invalid'})
+    }
+
+    const user = request.user
 
     const note = new Note({
         title: body.title,
         content: body.content,
-        date_created: body.date_created
+        date_created: body.date_created,
+        user: user.id
     })
 
-    note.save().then(savedNote => {
-        response.json(note)
-    })
+    const savedNote = await note.save()
+    user.notes = user.notes.concat(savedNote._id)
+    await user.save()
 
+    response.status(201).json(note)
 })
 
 
-notesRouter.delete('/:id', (request, response, next) => {
+notesRouter.delete('/:id', async (request, response, next) => {
     const id = request.params.id
 
     console.log("id: ")
     console.log(id)
 
-    Note.findByIdAndDelete(id)
-        .then(result => {
-            console.log('deleted this mf')
-            response.status(204).end()
-        })
-        .catch(error => {
-            next(error)
-        })
+    if(!request.token) {
+        return response.status(401).json({error: 'no token found'})
+    }
+
+    const decodedToken = jwt.verify(request.token, process.env.SECRET)
+
+    if(!decodedToken.id){
+        return response.status(401).json({error: 'invalid token'})
+    }
+
+    if (decodedToken.id.toString() === blog.user.toString()) {
+        const result = await Note.findByIdAndDelete(id).catch(error => next(error))
+        response.status(204).end()
+    } else {
+        return response.status(401).json({error: "incorrect token"})
+    }
 
 })
 

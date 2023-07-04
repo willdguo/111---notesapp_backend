@@ -4,6 +4,10 @@ const noteSchema = new mongoose.Schema({
     title: String,
     content: String,
     date_created: Date,
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    }
 })
 
 noteSchema.set('toJSON', {

@@ -1,7 +1,10 @@
 POST http://localhost:3001/api/notes
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkhlbGxvIFdvcmxkIiwiaWQiOiI2NGEzNGRhYjY5NzhkYmM3ODNkNjdkNTAiLCJpYXQiOjE2ODg0MjU1NDF9.H27k4slUAEud3PXQDbLLXzpnNHYB5zI7evqghTm55b0
 
 {
-    "title": "Added Note",
-    "name": "Hello Beautiful World!"
+    "title": "testing tokens part 222",
+    "content": "seeing if token auth works",
+    "date_created": null, 
+    "userId": "64a34dab6978dbc783d67d50"
 }
