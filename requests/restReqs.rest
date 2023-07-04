@@ -3,8 +3,8 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkhlbGxvIFdvcmxkIiwiaWQiOiI2NGEzNGRhYjY5NzhkYmM3ODNkNjdkNTAiLCJpYXQiOjE2ODg0MjU1NDF9.H27k4slUAEud3PXQDbLLXzpnNHYB5zI7evqghTm55b0
 
 {
-    "title": "testing tokens part 222",
-    "content": "seeing if token auth works",
-    "date_created": null, 
+    "title": "Finally Authorizaton",
+    "content": "Seeing why authorized notes aren't working",
+    "date_created": null,
     "userId": "64a34dab6978dbc783d67d50"
 }

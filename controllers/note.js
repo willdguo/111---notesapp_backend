@@ -41,6 +41,11 @@ notesRouter.post('/', async (request, response) => {
 
     const decodedToken = jwt.verify(request.token, process.env.SECRET)
 
+
+    // console.log('decoded token:' )
+    // console.log(decodedToken)
+    // console.log(decodedToken.id)
+
     if(!decodedToken.id) {
         return response.status(401).json({error: 'token invalid'})
     }
@@ -51,7 +56,7 @@ notesRouter.post('/', async (request, response) => {
         title: body.title,
         content: body.content,
         date_created: body.date_created,
-        user: user.id
+        user: user._id
     })
 
     const savedNote = await note.save()
@@ -74,11 +79,13 @@ notesRouter.delete('/:id', async (request, response, next) => {
 
     const decodedToken = jwt.verify(request.token, process.env.SECRET)
 
+    const note = await Note.findById(id)
+
     if(!decodedToken.id){
         return response.status(401).json({error: 'invalid token'})
     }
 
-    if (decodedToken.id.toString() === blog.user.toString()) {
+    if (decodedToken.id.toString() === note.user.toString()) {
         const result = await Note.findByIdAndDelete(id).catch(error => next(error))
         response.status(204).end()
     } else {

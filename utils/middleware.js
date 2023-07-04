@@ -5,7 +5,7 @@ const User = require('../models/user')
 const tokenExtractor = (request, response, next) => {
 
     const auth = request.get('authorization')
-    //console.log(auth)
+    // console.log(auth)
     if (auth && auth.startsWith('Bearer')){
       request.token = auth.replace('Bearer ', '')
       //console.log(request.token)
