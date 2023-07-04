@@ -16,6 +16,14 @@
             "dest": "/index.js"
         },
         {
+            "src": "/api/login",
+            "dest": "/index.js"
+        },
+        {
+            "src": "/api/users",
+            "dest": "/index.js"
+        },        
+        {
             "src": "/(.*)",
             "dest": "/build/$1"
         }
