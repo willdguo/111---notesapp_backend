@@ -12,22 +12,23 @@ notesRouter.get('/info', (request, response) => {
 
 
 notesRouter.get('/', async (request, response) => {
-    const notes = await Note.find({}).populate('user')
+    console.log('user: ')
+    console.log(request.user)
+    const notes = await Note.find({'user': request.user}).populate('user')
     response.json(notes)
 })
 
 
-notesRouter.get('/:id', (request, response, next) => {
+notesRouter.get('/:id', async (request, response, next) => {
     const id = request.params.id
 
-    Note.findById(id)
-        .then(note => {
-            if(note) {
-                response.json(note)
-            } else {
-                response.status(404).end()
-            }
-        }).catch(error => next(error))
+    const note = await Note.findById(id).catch(error => next(error))
+    
+    if(note) {
+        response.json(note)
+    } else {
+        response.status(404).end()
+    }
 
 })
 
@@ -40,11 +41,6 @@ notesRouter.post('/', async (request, response) => {
     }
 
     const decodedToken = jwt.verify(request.token, process.env.SECRET)
-
-
-    // console.log('decoded token:' )
-    // console.log(decodedToken)
-    // console.log(decodedToken.id)
 
     if(!decodedToken.id) {
         return response.status(401).json({error: 'token invalid'})
@@ -87,6 +83,14 @@ notesRouter.delete('/:id', async (request, response, next) => {
 
     if (decodedToken.id.toString() === note.user.toString()) {
         const result = await Note.findByIdAndDelete(id).catch(error => next(error))
+        console.log('does this even work')
+
+        const user = request.user
+        console.log(user)
+        console.log(user.notes)
+        user.notes = user.notes.filter(note => note.id.toString() !== id)
+        await user.save()
+
         response.status(204).end()
     } else {
         return response.status(401).json({error: "incorrect token"})
